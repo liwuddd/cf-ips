@@ -44,11 +44,23 @@ case "$ARCH" in
     *) echo "暂不支持的架构: $ARCH (把这一行发给李元芳看)"; exit 1 ;;
 esac
 URL="https://github.com/XIU2/CloudflareSpeedTest/releases/download/v2.3.5/cfst_linux_${PKG}.tar.gz"
-say "手机架构 $ARCH -> 下载 cfst_linux_${PKG}.tar.gz ..."
 cd "$WORK" || exit 1
 if [ ! -x "$WORK/cfst" ]; then
-    curl -L --retry 3 --connect-timeout 20 -o cfst.tar.gz "$URL" || { echo "下载失败: 多半是家里网络到 GitHub 慢或不稳, 换个时间或开代理后重跑; 若重跑还失败, 把报错原样拍照发给李元芳。"; exit 1; }
-    tar -xzf cfst.tar.gz
+    # 优先用本地已有的安装包 (经聊天附件等方式放进手机的), 没有才去 GitHub 下载
+    LOCAL_TGZ=""
+    for cand in "$HOME/cfst_linux_${PKG}.tar.gz" "$HOME/storage/downloads/cfst_linux_${PKG}.tar.gz" "$WORK/cfst.tar.gz"; do
+        if [ -f "$cand" ]; then LOCAL_TGZ="$cand"; break; fi
+    done
+    if [ -n "$LOCAL_TGZ" ]; then
+        say "发现本地安装包 $LOCAL_TGZ, 直接解压使用。"
+        cp "$LOCAL_TGZ" "$WORK/cfst.tar.gz"
+    else
+        say "手机架构 $ARCH -> 下载 cfst_linux_${PKG}.tar.gz (带断点续传) ..."
+        curl -L -C - --retry 5 --retry-all-errors --connect-timeout 20 -o cfst.tar.gz "$URL" || { echo "下载失败: 多半是家里网络到 GitHub 慢或不稳, 换个时间或开代理后重跑; 若重跑还失败, 把报错原样拍照发给李元芳。"; exit 1; }
+    fi
+    # 官方 tar 包内有一层同名子目录, 解压时剥掉一层; 剥不动时再从子目录里取
+    tar -xzf cfst.tar.gz --strip-components=1 2>/dev/null || tar -xzf cfst.tar.gz
+    if [ ! -f cfst ] && [ -f "cfst_linux_${PKG}/cfst" ]; then cp "cfst_linux_${PKG}/cfst" cfst; fi
     rm -f cfst.tar.gz
     chmod +x cfst
 fi
