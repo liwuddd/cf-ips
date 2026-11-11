@@ -29,8 +29,9 @@ if command -v termux-wake-lock >/dev/null 2>&1; then
 fi
 
 # ---------- 1. 依赖 ----------
-say "安装依赖 (cronie / git / curl / tar), 第一次会先更新软件源, 可能要等几分钟..."
+say "先把系统包整体升级到一致版本 (只升一半会让 curl 的库对不上、直接崩溃), 再安装依赖 (cronie / git / curl / tar), 可能要等几分钟..."
 pkg update -y >/dev/null 2>&1
+pkg upgrade -y || { echo "系统包整体升级失败, 检查网络后重跑本脚本。"; exit 1; }
 pkg install -y cronie git curl tar || { echo "依赖安装失败, 检查网络后重跑本脚本。"; exit 1; }
 
 # ---------- 2. 按架构下载 cfst ----------
@@ -46,7 +47,7 @@ URL="https://github.com/XIU2/CloudflareSpeedTest/releases/download/v2.3.5/cfst_l
 say "手机架构 $ARCH -> 下载 cfst_linux_${PKG}.tar.gz ..."
 cd "$WORK" || exit 1
 if [ ! -x "$WORK/cfst" ]; then
-    curl -L --retry 3 --connect-timeout 20 -o cfst.tar.gz "$URL" || { echo "下载失败: 家里网络到 GitHub 可能较慢, 换个时间或开代理后重跑。"; exit 1; }
+    curl -L --retry 3 --connect-timeout 20 -o cfst.tar.gz "$URL" || { echo "下载失败: 多半是家里网络到 GitHub 慢或不稳, 换个时间或开代理后重跑; 若重跑还失败, 把报错原样拍照发给李元芳。"; exit 1; }
     tar -xzf cfst.tar.gz
     rm -f cfst.tar.gz
     chmod +x cfst
