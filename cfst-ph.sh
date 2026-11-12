@@ -1,10 +1,11 @@
 #!/data/data/com.termux/files/usr/bin/bash
 # ============================================================
-# cfst-ph.sh v3 - 安卓 Termux 版: 三国优选 (新加坡/日本/英国)
+# cfst-ph.sh v3.1 - 安卓 Termux 版: 五国优选 (新加坡/日本/英国/美国/菲律宾)
 #
 # 2026-11-11 用户新规格 (取代 v2 的菲律宾 MNL 单目标):
-#   - 目标落点: SIN 新加坡 / NRT 日本 / LHR 英国, 每国只要 2-3 个
-#   - 延迟门槛 (cfst TCP 延迟): SIN <200ms, NRT <200ms, LHR <400ms
+#   - 目标落点: SIN 新加坡 / NRT 日本 / LHR 英国 / LAX 美国 / MNL 菲律宾, 每国只要 2-3 个
+#   - 延迟门槛 (cfst TCP 延迟): SIN <200, NRT <200, LHR <400, LAX <300, MNL <400 (ms)
+#     (MNL 在用户家宽结构性落不到、会长期空缺, 留作路由变化时的哨兵)
 #   - 达标候选再用 curl 测下载速度排序, 每国取前 3
 #   - 名单 best-ips.txt 为纯节点行 (IP:443#SG 优选 等), 无注释行
 #   - 跑完自动把名单/明细/日志尾巴传 GitHub 仓库 phone/ 目录
@@ -12,7 +13,7 @@
 # 背景: 用户家宽路由不去菲律宾 (2672 个 IP 全量普查 MNL 为 0),
 # 且 cfst 的 HTTPing/自带测速在其家宽不通, 故沿用 v2 分工:
 # cfst 只做 TCP 延迟, 落点与下载都由 curl 完成。
-# 某国达标为 0 时该国不出现 (不放宽门槛凑数); 三国全 0 不覆盖旧名单。
+# 某国达标为 0 时该国不出现 (不放宽门槛凑数); 五国全 0 不覆盖旧名单。
 # ============================================================
 DIR=$(cd "$(dirname "$0")" && pwd)
 BIN="$DIR/cfst"
@@ -38,7 +39,9 @@ cd "$DIR" || exit 1
 # 目标表: 落点 延迟门槛ms 名单标签 (一行一个)
 TARGETS="SIN 200 SG
 NRT 200 JP
-LHR 400 UK"
+LHR 400 UK
+LAX 300 US
+MNL 400 PH"
 
 # ---------- 1. cfst TCP 延迟扫描 ----------
 LATCSV="$RUNDIR/latency.csv"
@@ -54,7 +57,7 @@ CAND_N=$(wc -l < "$CAND" | tr -d ' ')
 if [ "$CAND_N" = "0" ]; then log "延迟扫描没有可用 IP, 本次跳过, 名单保持不变。"; exit 1; fi
 log "延迟扫描完成: $CAND_N 个 IP 可用。"
 
-# ---------- 2. curl 查落点 (只查延迟 <400ms 的, 覆盖三国最宽门槛) ----------
+# ---------- 2. curl 查落点 (只查延迟 <400ms 的, 覆盖五国最宽门槛) ----------
 CHECK="$RUNDIR/check.txt"
 awk '$2+0<400' "$CAND" | head -n "$COLO_MAX" > "$CHECK"
 CHECK_N=$(wc -l < "$CHECK" | tr -d ' ')
@@ -76,7 +79,7 @@ log "落点分布 (延迟<400ms 的 $CHECK_N 个): $DIST"
 # ---------- 3. 逐国筛选 + 下载测速 + 写名单 ----------
 BESTTMP="$RUNDIR/best.tmp"; : > "$BESTTMP"
 FULLTMP="$RUNDIR/full.tmp"
-echo "# 三国优选明细 - 安卓机自动生成于 $(date '+%Y-%m-%d %H:%M:%S') (v3: SIN<200ms / NRT<200ms / LHR<400ms, 每国前 $PICK_N)" > "$FULLTMP"
+echo "# 五国优选明细 - 安卓机自动生成于 $(date '+%Y-%m-%d %H:%M:%S') (v3.1: SIN<200 / NRT<200 / LHR<400 / LAX<300 / MNL<400 ms, 每国前 $PICK_N)" > "$FULLTMP"
 TOTAL_PICKS=0
 while read -r colo cap label; do
     [ -n "$colo" ] || continue
@@ -120,7 +123,7 @@ $TARGETS
 EOF
 
 if [ "$TOTAL_PICKS" = "0" ]; then
-    log "本轮三国均无达标 IP, 名单保持不变。"
+    log "本轮五国均无达标 IP, 名单保持不变。"
     exit 0
 fi
 mv "$BESTTMP" "$BEST"
@@ -159,4 +162,4 @@ if [ -f "$DIR/gh-token" ]; then
         if [ "$ok" = "1" ]; then log "GitHub 上传完成 (phone/ 目录)。"; else log "GitHub 上传有失败项 (名单已在本地更新, 不影响)。"; fi
     fi
 fi
-log "完成: 本轮三国共入选 $TOTAL_PICKS 个, 原始结果存档 results/$STAMP"
+log "完成: 本轮五国共入选 $TOTAL_PICKS 个, 原始结果存档 results/$STAMP"
