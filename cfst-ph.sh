@@ -1,9 +1,9 @@
 #!/data/data/com.termux/files/usr/bin/bash
 # ============================================================
-# cfst-ph.sh v3.1 - 安卓 Termux 版: 五国优选 (新加坡/日本/英国/美国/菲律宾)
+# cfst-ph.sh v3.2 - 安卓 Termux 版: 五国优选 (新加坡/日本/英国/美国/菲律宾)
 #
 # 2026-11-11 用户新规格 (取代 v2 的菲律宾 MNL 单目标):
-#   - 目标落点: SIN 新加坡 / NRT 日本 / LHR 英国 / LAX 美国 / MNL 菲律宾, 每国只要 2-3 个
+#   - 目标落点: SIN 新加坡 / NRT 日本 / LHR 英国 / LAX 美国 / MNL 菲律宾, 每国 5 个
 #   - 延迟门槛 (cfst TCP 延迟): SIN <200, NRT <200, LHR <400, LAX <300, MNL <400 (ms)
 #     (MNL 在用户家宽结构性落不到、会长期空缺, 留作路由变化时的哨兵)
 #   - 达标候选再用 curl 测下载速度排序, 每国取前 3
@@ -24,8 +24,8 @@ FULL="$DIR/best-ips-full.txt"
 LOCK="$DIR/.running"
 REPO="liwuddd/cf-ips"
 DL_BYTES=10485760       # 下载测速文件大小 (10MB)
-DL_POOL=8               # 每国最多对多少个达标候选测下载
-PICK_N=3                # 每国入选个数
+DL_POOL=10               # 每国最多对多少个达标候选测下载
+PICK_N=5                # 每国入选个数
 COLO_MAX=3000           # 查落点的 IP 数上限 (按延迟升序截断)
 mkdir -p "$LOGDIR" "$RESDIR"
 log() { echo "[$(date '+%Y-%m-%d %H:%M:%S')] $1" >> "$LOGDIR/run.log"; echo "$1"; }
