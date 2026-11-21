@@ -109,6 +109,46 @@ proxies:
       headers:
         Host: sterling-metabolism-lib-calling.trycloudflare.com
 
+  - name: Altare-BKK-热点1
+    type: vless
+    server: 104.21.63.28
+    port: 443
+    uuid: a3481c85-ef57-4e2e-ac6b-72d05d82c664
+    network: ws
+    tls: true
+    udp: true
+    servername: sterling-metabolism-lib-calling.trycloudflare.com
+    ws-opts:
+      path: /bkk-ws
+      headers:
+        Host: sterling-metabolism-lib-calling.trycloudflare.com
+  - name: Altare-BKK-热点2
+    type: vless
+    server: 172.67.142.169
+    port: 443
+    uuid: a3481c85-ef57-4e2e-ac6b-72d05d82c664
+    network: ws
+    tls: true
+    udp: true
+    servername: sterling-metabolism-lib-calling.trycloudflare.com
+    ws-opts:
+      path: /bkk-ws
+      headers:
+        Host: sterling-metabolism-lib-calling.trycloudflare.com
+  - name: Altare-BKK-热点3
+    type: vless
+    server: 104.18.235.68
+    port: 443
+    uuid: a3481c85-ef57-4e2e-ac6b-72d05d82c664
+    network: ws
+    tls: true
+    udp: true
+    servername: sterling-metabolism-lib-calling.trycloudflare.com
+    ws-opts:
+      path: /bkk-ws
+      headers:
+        Host: sterling-metabolism-lib-calling.trycloudflare.com
+
 proxy-groups:
   - name: PROXY
     type: select
@@ -119,6 +159,9 @@ proxy-groups:
       - Altare-BKK-联通1
       - Altare-BKK-联通2
       - Altare-BKK-联通3
+      - Altare-BKK-热点1
+      - Altare-BKK-热点2
+      - Altare-BKK-热点3
       - Altare-BSZ
       - DIRECT
 
