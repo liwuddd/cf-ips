@@ -42,11 +42,40 @@ proxies:
       headers:
         Host: futures-irrigation-recent-diameter.trycloudflare.com
 
+  - name: Altare-BKK-优选1
+    type: vless
+    server: 172.64.53.193
+    port: 443
+    uuid: a3481c85-ef57-4e2e-ac6b-72d05d82c664
+    network: ws
+    tls: true
+    udp: true
+    servername: sterling-metabolism-lib-calling.trycloudflare.com
+    ws-opts:
+      path: /bkk-ws
+      headers:
+        Host: sterling-metabolism-lib-calling.trycloudflare.com
+  - name: Altare-BKK-优选2
+    type: vless
+    server: 108.162.198.254
+    port: 443
+    uuid: a3481c85-ef57-4e2e-ac6b-72d05d82c664
+    network: ws
+    tls: true
+    udp: true
+    servername: sterling-metabolism-lib-calling.trycloudflare.com
+    ws-opts:
+      path: /bkk-ws
+      headers:
+        Host: sterling-metabolism-lib-calling.trycloudflare.com
+
 proxy-groups:
   - name: PROXY
     type: select
     proxies:
       - Altare-BKK
+      - Altare-BKK-优选1
+      - Altare-BKK-优选2
       - Altare-BSZ
       - DIRECT
 
