@@ -1,0 +1,54 @@
+mixed-port: 7890
+allow-lan: false
+mode: rule
+log-level: info
+ipv6: false
+
+dns:
+  enable: true
+  listen: 127.0.0.1:1053
+  default-nameserver:
+    - 223.5.5.5
+    - 119.29.29.29
+  nameserver:
+    - https://dns.alidns.com/dns-query
+    - https://doh.pub/dns-query
+
+proxies:
+  - name: Altare-BKK
+    type: vless
+    server: sterling-metabolism-lib-calling.trycloudflare.com
+    port: 443
+    uuid: a3481c85-ef57-4e2e-ac6b-72d05d82c664
+    network: ws
+    tls: true
+    udp: true
+    servername: sterling-metabolism-lib-calling.trycloudflare.com
+    ws-opts:
+      path: /bkk-ws
+      headers:
+        Host: sterling-metabolism-lib-calling.trycloudflare.com
+  - name: Altare-BSZ
+    type: vless
+    server: futures-irrigation-recent-diameter.trycloudflare.com
+    port: 443
+    uuid: 7af5e7a2-5ebb-4c91-9c6f-cc3dda89a4a5
+    network: ws
+    tls: true
+    udp: true
+    servername: futures-irrigation-recent-diameter.trycloudflare.com
+    ws-opts:
+      path: /bsz-ws
+      headers:
+        Host: futures-irrigation-recent-diameter.trycloudflare.com
+
+proxy-groups:
+  - name: PROXY
+    type: select
+    proxies:
+      - Altare-BKK
+      - Altare-BSZ
+      - DIRECT
+
+rules:
+  - MATCH,PROXY
