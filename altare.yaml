@@ -15,100 +15,6 @@ dns:
     - https://doh.pub/dns-query
 
 proxies:
-  - name: Altare-BKK
-    type: vless
-    server: sterling-metabolism-lib-calling.trycloudflare.com
-    port: 443
-    uuid: a3481c85-ef57-4e2e-ac6b-72d05d82c664
-    network: ws
-    tls: true
-    udp: true
-    servername: sterling-metabolism-lib-calling.trycloudflare.com
-    ws-opts:
-      path: /bkk-ws
-      headers:
-        Host: sterling-metabolism-lib-calling.trycloudflare.com
-  - name: Altare-BSZ
-    type: vless
-    server: futures-irrigation-recent-diameter.trycloudflare.com
-    port: 443
-    uuid: 7af5e7a2-5ebb-4c91-9c6f-cc3dda89a4a5
-    network: ws
-    tls: true
-    udp: true
-    servername: futures-irrigation-recent-diameter.trycloudflare.com
-    ws-opts:
-      path: /bsz-ws
-      headers:
-        Host: futures-irrigation-recent-diameter.trycloudflare.com
-
-  - name: Altare-BKK-优选1
-    type: vless
-    server: 172.64.53.193
-    port: 443
-    uuid: a3481c85-ef57-4e2e-ac6b-72d05d82c664
-    network: ws
-    tls: true
-    udp: true
-    servername: sterling-metabolism-lib-calling.trycloudflare.com
-    ws-opts:
-      path: /bkk-ws
-      headers:
-        Host: sterling-metabolism-lib-calling.trycloudflare.com
-  - name: Altare-BKK-优选2
-    type: vless
-    server: 108.162.198.254
-    port: 443
-    uuid: a3481c85-ef57-4e2e-ac6b-72d05d82c664
-    network: ws
-    tls: true
-    udp: true
-    servername: sterling-metabolism-lib-calling.trycloudflare.com
-    ws-opts:
-      path: /bkk-ws
-      headers:
-        Host: sterling-metabolism-lib-calling.trycloudflare.com
-
-  - name: Altare-BKK-联通1
-    type: vless
-    server: 104.29.124.40
-    port: 443
-    uuid: a3481c85-ef57-4e2e-ac6b-72d05d82c664
-    network: ws
-    tls: true
-    udp: true
-    servername: sterling-metabolism-lib-calling.trycloudflare.com
-    ws-opts:
-      path: /bkk-ws
-      headers:
-        Host: sterling-metabolism-lib-calling.trycloudflare.com
-  - name: Altare-BKK-联通2
-    type: vless
-    server: 162.159.160.130
-    port: 443
-    uuid: a3481c85-ef57-4e2e-ac6b-72d05d82c664
-    network: ws
-    tls: true
-    udp: true
-    servername: sterling-metabolism-lib-calling.trycloudflare.com
-    ws-opts:
-      path: /bkk-ws
-      headers:
-        Host: sterling-metabolism-lib-calling.trycloudflare.com
-  - name: Altare-BKK-联通3
-    type: vless
-    server: 162.159.237.17
-    port: 443
-    uuid: a3481c85-ef57-4e2e-ac6b-72d05d82c664
-    network: ws
-    tls: true
-    udp: true
-    servername: sterling-metabolism-lib-calling.trycloudflare.com
-    ws-opts:
-      path: /bkk-ws
-      headers:
-        Host: sterling-metabolism-lib-calling.trycloudflare.com
-
   - name: Altare-BKK-热点1
     type: vless
     server: 104.21.63.28
@@ -149,20 +55,14 @@ proxies:
       headers:
         Host: sterling-metabolism-lib-calling.trycloudflare.com
 
+
 proxy-groups:
   - name: PROXY
     type: select
     proxies:
-      - Altare-BKK
-      - Altare-BKK-优选1
-      - Altare-BKK-优选2
-      - Altare-BKK-联通1
-      - Altare-BKK-联通2
-      - Altare-BKK-联通3
       - Altare-BKK-热点1
       - Altare-BKK-热点2
       - Altare-BKK-热点3
-      - Altare-BSZ
       - DIRECT
 
 rules:
